@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import Tables
 class CriticalProperties():
     def __init__(self, Unit='SI'):
         self.Unit = Unit
@@ -64,8 +64,11 @@ class CriticalProperties():
             
             self.Zc = 0.2901 - 0.0879 * self.omega
             
-    def Riazi_Daubert(self, theta1, theta2, Tabel, Tabel_index_selection=0):
-        self.Tabel = Tabel
+    def Riazi_Daubert(self, theta1, theta2, Tabel_index_selection=0):
+        if self.Unit == 'SI':   
+            self.Tabel = Tables.Table_Riazi_Daubert_SI()
+        elif self.Unit == 'Field':   
+            self.Tabel = Tables.Table_Riazi_Daubert_Field()
         self.Tabel_index_selection = Tabel_index_selection
         self.RD_a = self.Tabel.iloc[self.Tabel_index_selection]['a']
         self.RD_b = self.Tabel.iloc[self.Tabel_index_selection]['b']
@@ -78,6 +81,9 @@ class CriticalProperties():
         self.theta2_name = self.Tabel.iloc[self.Tabel_index_selection]['theta2']
         self.theta1 = theta1
         self.theta2 = theta2
-
+            
         self.theta = self.RD_a * (np.exp(self.RD_b*self.theta1+self.RD_c*self.theta2+ \
             self.RD_d*self.theta1*self.theta2)) * self.theta1**self.RD_e * self.theta2**self.RD_f
+        print(self.theta_name +'('+ self.theta1_name + ',' + \
+              self.theta2_name +')'+' =', self.theta)
+        
